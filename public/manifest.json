@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "firefox-command-palette",
+  "version": "1.0",
+  "description": "An extension for Firefox that introduces a 'Command Palette' like in VSCode",
+  "action": {
+    "default_title": "Command Palette",
+    "default_popup": "index.html"
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+Alt+P"
+      }
+    }
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "tabs"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ]
+}
