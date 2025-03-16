@@ -7,3 +7,60 @@
 .displayNone {
     display: none;
 }
+
+body {
+    background-color: #222;
+    color: white;
+}
+
+.body-inner {
+    margin: 1rem;
+}
+
+.commands__search {
+    background-color: #111;
+    color: white;
+
+    width: 100%;
+    margin: 0.5rem 0;
+    padding: 0.5rem 1rem;
+    font-size: 16px;
+
+    border: none;
+    outline: none;
+
+    border-radius: 4px;
+}
+
+.commands__search::placeholder {
+    color: #eee;
+    opacity: 1; /* Firefox */
+}
+
+.commands__list {
+    list-style-type: none;
+}
+
+.commands__list-item {
+}
+
+.commands__command {
+    background: #222;
+    color: white;
+    padding: 0.5rem 1rem;
+    width: 100%;
+    text-align: left;
+    font-size: 1rem;
+
+    border: 1px solid black;
+    border-radius: 4px;
+
+    margin: 0.125rem 0;
+    outline: none;
+    cursor: pointer;
+}
+
+.commands__command:hover,
+.commands__command:focus-visible {
+    background: #111;
+}
