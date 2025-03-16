@@ -19,8 +19,8 @@ async function handleJavascriptBookmark(url: string) {
 
     await browser.scripting.executeScript({
         target: { tabId: currentTab },
-        //@ts-ignore
-        func: (url: any) => {
+        // @ts-expect-error Incorrect typing from the library. It takes the 'url' argument from the [args] array.
+        func: (url) => {
             const script = document.createElement('script')
             script.innerHTML = url
             document.body.appendChild(script)
