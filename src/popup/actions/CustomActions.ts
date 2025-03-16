@@ -9,5 +9,13 @@ export const getMiscActions: () => Promise<Action[]> = async () => [
                 url: "about:blank"
             })
         }
+    },
+    {
+        name: "Restore Previous Session",
+        callback: async () => {
+            await browser.sessions.restore();
+        }
     }
+
+
 ]

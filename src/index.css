@@ -34,7 +34,7 @@ body {
 
 .commands__search::placeholder {
     color: #eee;
-    opacity: 1; /* Firefox */
+    opacity: 1;
 }
 
 .commands__list {

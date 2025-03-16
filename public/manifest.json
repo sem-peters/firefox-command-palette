@@ -20,7 +20,8 @@
     "scripting",
     "tabs",
     "bookmarks",
-    "scripting"
+    "scripting",
+    "sessions"
   ],
   "host_permissions": [
     "<all_urls>"
