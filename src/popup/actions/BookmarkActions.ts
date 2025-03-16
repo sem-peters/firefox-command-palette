@@ -1,24 +1,58 @@
 import {Action} from "./index.ts";
 import BookmarkTreeNode = browser.bookmarks.BookmarkTreeNode;
 
-function recursivelyAddBookmarkActions(bookmarkEntry: BookmarkTreeNode, folderPath: string, bookmarkActions: Action[]) {
+async function handleDefaultBookmark(url: string) {
+    await browser.tabs.create({
+        active: true,
+        url: url,
+    })
+}
 
+async function handleJavascriptBookmark(url: string) {
+    url = url.substring('javascript:'.length);
+
+    const currentTab = (await browser.tabs.query({active: true}))[0]?.id;
+    if (!currentTab) {
+        console.error("No current tab");
+        return;
+    }
+
+    await browser.scripting.executeScript({
+        target: { tabId: currentTab },
+        //@ts-ignore
+        func: (url: any) => {
+            const script = document.createElement('script')
+            script.innerHTML = url
+            document.body.appendChild(script)
+            script.remove();
+        },
+        args: [url]
+    });
+
+}
+
+function recursivelyAddBookmarkActions(bookmarkEntry: BookmarkTreeNode, folderPath: string, bookmarkActions: Action[]) {
     if (bookmarkEntry.type === "bookmark") {
-        bookmarkActions.push({
-            name: folderPath + bookmarkEntry.title,
-            callback: async () => {
-                await browser.tabs.create({
-                    active: true,
-                    url: bookmarkEntry.url,
-                })
+        if (!bookmarkEntry.url) return;
+        const bookmarkName = folderPath + bookmarkEntry.title
+        let callback;
+        if (bookmarkEntry.url.startsWith('javascript:')) {
+            callback = async () => await handleJavascriptBookmark(bookmarkEntry.url!)
+        } else {
+            callback = async () => {
+                await handleDefaultBookmark(bookmarkEntry.url!);
             }
+        }
+
+        bookmarkActions.push({
+            name: bookmarkName,
+            callback
         })
     }
 
-    bookmarkEntry.children?.forEach((subChild) => {
-        recursivelyAddBookmarkActions(subChild, folderPath + bookmarkEntry.title + ' > ', bookmarkActions)
+    bookmarkEntry.children?.forEach(child => {
+        recursivelyAddBookmarkActions(child, folderPath + bookmarkEntry.title + " > ", bookmarkActions)
     })
-
 }
 
 export const getBookmarkActions = async () => {
