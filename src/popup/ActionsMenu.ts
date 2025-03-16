@@ -20,9 +20,11 @@ export class ActionsMenu extends HTMLFormElement {
     connectedCallback() {
         this.render();
 
-        import("./actions.ts").then((actionsModule) => {
-            actionsModule.ACTIONS.forEach((action) => {
-                this.appendCommand(action.name, action.callback)
+        import("./actions").then((actionsModule) => {
+            actionsModule.getActions().then((actions) => {
+                actions.forEach((action) => {
+                    this.appendCommand(action.name, action.callback)
+                })
             })
         })
 
@@ -62,6 +64,8 @@ export class ActionsMenu extends HTMLFormElement {
         commandElement.callback = callback;
 
         this.commandsList.appendChild(commandElement)
+
+        this.searchInput?.focus();
     }
 
     searchCommandExact(name: string): HTMLElement | null {
@@ -70,7 +74,7 @@ export class ActionsMenu extends HTMLFormElement {
             return null;
         }
 
-        return this.commandsList.querySelector(name)
+        return this.commandsList.querySelector(`[command="${name}"]`)
     }
 
     searchCommandsMatching(normalizedName: string): CommandSearchResult {
@@ -107,6 +111,13 @@ export class ActionsMenu extends HTMLFormElement {
             const searchResult = this.searchCommandsMatching(searchValue)
             searchResult.matching.forEach((matchingCommand) => matchingCommand.hide = false)
             searchResult.notMatching.forEach((notMatchingCommand) => notMatchingCommand.hide = true)
+        })
+
+        this.searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault()
+                this.commandsList?.querySelector(`[command][hide="false"]`)?.querySelector('button')?.click();
+            }
         })
     }
 }
